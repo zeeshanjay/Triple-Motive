@@ -3,15 +3,38 @@ import { createClient } from '@supabase/supabase-js';
 import fs from 'fs';
 import path from 'path';
 
-// Primary client (liberty-science)
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://cqjaqbujrhgqcqygbyow.supabase.co';
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
-const primarySupabase = createClient(supabaseUrl, supabaseKey);
+// Force dynamic execution so Next.js does not attempt static pre-rendering at build time
+export const dynamic = 'force-dynamic';
 
-// Backup client (glqvvenciupqxosdilsm)
-const backupUrl = process.env.BACKUP_SUPABASE_URL || '';
-const backupKey = process.env.BACKUP_SUPABASE_ANON_KEY || '';
-const backupSupabase = backupUrl && backupKey ? createClient(backupUrl, backupKey) : null;
+const DEFAULT_SUPABASE_URL = 'https://cqjaqbujrhgqcqygbyow.supabase.co';
+const DEFAULT_ANON_KEY =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNxamFxYnVqcmhncWNxeWdieW93Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI4MTM3MzIsImV4cCI6MjEwODM4OTczMn0.6lWdRrzUFfNifvu9tt0wUmc-dxzWC4I8qxdoT_CcKig';
+
+const BACKUP_URL = 'https://glqvvenciupqxosdilsm.supabase.co';
+const BACKUP_KEY =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdscXZ2ZW5jaXVwcXhvc2RpbHNtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY3MDk1MTAsImV4cCI6MjEwMjI4NTUxMH0.4yXp1TA5MRGf7ZfwSRMayV_iWx6m8t69J7HDKkbHILo';
+
+function getPrimaryClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL || DEFAULT_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || DEFAULT_ANON_KEY;
+  if (!url || !key) return null;
+  try {
+    return createClient(url, key);
+  } catch (e) {
+    return null;
+  }
+}
+
+function getBackupClient() {
+  const url = process.env.BACKUP_SUPABASE_URL || BACKUP_URL;
+  const key = process.env.BACKUP_SUPABASE_ANON_KEY || BACKUP_KEY;
+  if (!url || !key) return null;
+  try {
+    return createClient(url, key);
+  } catch (e) {
+    return null;
+  }
+}
 
 export async function POST(req: Request) {
   try {
@@ -38,37 +61,43 @@ export async function POST(req: Request) {
     let storedInPrimary = false;
     let storedInBackup = false;
 
-    // 1. Attempt Primary Supabase Insert (liberty-science)
-    try {
-      const { data, error } = await primarySupabase
-        .from('triple_motive_inquiries')
-        .insert([inquiryRecord]);
+    // 1. Primary Supabase Insert (liberty-science)
+    const primaryClient = getPrimaryClient();
+    if (primaryClient) {
+      try {
+        const { error } = await primaryClient
+          .from('triple_motive_inquiries')
+          .insert([inquiryRecord]);
 
-      if (!error) {
-        storedInPrimary = true;
-      } else {
-        console.warn('Primary Supabase notice:', error.message);
+        if (!error) {
+          storedInPrimary = true;
+        } else {
+          console.warn('Primary Supabase notice:', error.message);
+        }
+      } catch (e) {
+        console.warn('Primary Supabase write exception:', e);
       }
-    } catch (e) {
-      console.warn('Primary Supabase write exception:', e);
     }
 
     // 2. Dual-write to Backup Active Supabase table
-    if (backupSupabase) {
+    const backupClient = getBackupClient();
+    if (backupClient) {
       try {
-        const { error: bError } = await backupSupabase
+        const { error: bError } = await backupClient
           .from('triple_motive_inquiries')
           .insert([inquiryRecord]);
 
         if (!bError) {
           storedInBackup = true;
+        } else {
+          console.warn('Backup Supabase notice:', bError.message);
         }
       } catch (be) {
         console.warn('Backup Supabase notice:', be);
       }
     }
 
-    // 3. Local persistent file backup (guarantees zero data loss under all conditions)
+    // 3. Optional local persistent backup (safe for local / server environments)
     try {
       const dataDir = path.join(process.cwd(), 'data');
       if (!fs.existsSync(dataDir)) {
@@ -80,8 +109,8 @@ export async function POST(req: Request) {
         : [];
       existing.unshift(inquiryRecord);
       fs.writeFileSync(filePath, JSON.stringify(existing, null, 2), 'utf8');
-    } catch (fe) {
-      console.warn('Local file write error:', fe);
+    } catch {
+      // Vercel serverless environment has read-only filesystem; Supabase handles persistence
     }
 
     return NextResponse.json({
@@ -90,7 +119,7 @@ export async function POST(req: Request) {
       persisted: {
         primary: storedInPrimary,
         backup: storedInBackup,
-        local: true,
+        cloud: storedInPrimary || storedInBackup,
       },
     });
   } catch (error: any) {
