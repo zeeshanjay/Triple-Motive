@@ -102,11 +102,11 @@ export default function ConversationFooter() {
   return (
     <footer
       id="dialogue"
-      className="relative bg-canvas border-t-2 border-ink pt-32 sm:pt-40 pb-24 sm:pb-32 overflow-hidden scroll-mt-12"
+      className="relative bg-canvas border-t-2 border-ink pt-20 sm:pt-28 pb-20 sm:pb-24 overflow-hidden scroll-mt-12"
     >
       <div className="max-w-[1720px] mx-auto px-6 sm:px-12">
         {/* Section Header with Strict Overline Spacing */}
-        <div className="pb-16 border-b border-[#D1CBD0]/80 flex flex-col lg:flex-row lg:items-end justify-between gap-8">
+        <div className="pb-12 border-b border-[#D1CBD0]/80 flex flex-col lg:flex-row lg:items-end justify-between gap-8">
           <div className="flex flex-col">
             {/* Overline Mini-Heading */}
             <div className="flex items-center gap-3 mb-6">

@@ -212,11 +212,11 @@ export default function ImpactShowcase() {
   return (
     <section
       id="impact"
-      className="relative min-h-screen py-32 sm:py-40 border-b border-[#D1CBD0]/80 bg-canvas overflow-hidden"
+      className="relative py-20 sm:py-28 border-b border-[#D1CBD0]/80 bg-canvas overflow-hidden"
     >
       <div className="max-w-[1720px] mx-auto px-6 sm:px-12">
         {/* Section Header */}
-        <div className="pb-16 border-b border-[#D1CBD0] flex flex-col lg:flex-row lg:items-end justify-between gap-8">
+        <div className="pb-12 border-b border-[#D1CBD0] flex flex-col lg:flex-row lg:items-end justify-between gap-8">
           <div className="flex flex-col">
             <div className="flex items-center gap-3 mb-6">
               <span className="px-2.5 py-1 bg-cobalt text-canvas font-mono text-[11px] tracking-[0.16em] uppercase font-bold">

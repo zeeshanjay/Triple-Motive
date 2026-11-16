@@ -24,7 +24,7 @@ export default function HeroSection() {
   return (
     <section
       id="hero"
-      className="relative min-h-[92vh] pt-32 sm:pt-36 lg:pt-42 pb-20 lg:pb-28 border-b border-[#D1CBD0]/60 overflow-hidden bg-canvas"
+      className="relative min-h-[85vh] pt-32 sm:pt-36 lg:pt-40 pb-14 lg:pb-18 border-b border-[#D1CBD0]/60 overflow-hidden bg-canvas"
     >
       <div className="max-w-[1720px] w-full mx-auto px-6 sm:px-12">
         {/* Main Editorial Asymmetrical Layout: Pure Typography on Left & 3D Monument on Right */}
