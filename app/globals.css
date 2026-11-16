@@ -1,0 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;700&family=Oswald:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --canvas: #F2EFE9;
+  --canvas-muted: #E7E3DA;
+  --ink: #111111;
+  --cobalt: #1D4ED8;
+  --stone: #8A857C;
+  --font-display: 'Oswald', 'Anton', sans-serif;
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background-color: var(--canvas);
+  color: var(--ink);
+  scroll-behavior: auto; /* Handled smoothly by Lenis */
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  overflow-x: hidden;
+  background-color: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  selection-background-color: var(--cobalt);
+  selection-color: #ffffff;
+}
+
+::selection {
+  background: #1D4ED8;
+  color: #F2EFE9;
+}
+
+/* Subtle physical editorial paper grain overlay */
+.editorial-grain {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Editorial hairline rules */
+.hairline-b {
+  border-bottom: 1px solid rgba(138, 133, 124, 0.25);
+}
+
+.hairline-t {
+  border-top: 1px solid rgba(138, 133, 124, 0.25);
+}
+
+.hairline-l {
+  border-left: 1px solid rgba(138, 133, 124, 0.25);
+}
+
+.hairline-r {
+  border-right: 1px solid rgba(138, 133, 124, 0.25);
+}
+
+.hairline-all {
+  border: 1px solid rgba(138, 133, 124, 0.25);
+}
+
+/* Massive display heading styles */
+.display-headline {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  line-height: 0.92;
+  letter-spacing: -0.025em;
+  font-size: clamp(3.2rem, 7.8vw, 7.8rem);
+  font-weight: 700;
+}
+
+.display-title {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  line-height: 0.95;
+  letter-spacing: -0.02em;
+  font-size: clamp(2.2rem, 5vw, 4.8rem);
+  font-weight: 700;
+}
+
+/* Monospace micro tags */
+.micro-tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.2;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #F2EFE9;
+}
+::-webkit-scrollbar-thumb {
+  background: #8A857C;
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #1D4ED8;
+}
+
+/* Hide scrollbar for clean UI elements */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

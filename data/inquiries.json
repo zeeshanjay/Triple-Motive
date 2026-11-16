@@ -1,0 +1,20 @@
+[
+  {
+    "full_name": "Marcus Sterling",
+    "company": "Vanguard Aerospace",
+    "email": "m.sterling@vanguardaero.com",
+    "phone": "+1 (303) 991-8820",
+    "message": "Evaluating category repositioning narrative and brand trust architecture.",
+    "status": "new",
+    "created_at": "2026-11-16T14:52:19.731Z"
+  },
+  {
+    "full_name": "Test Founder",
+    "company": "Aura Capital",
+    "email": "test@auracapital.com",
+    "phone": "+1 (303) 555-0199",
+    "message": "Testing Supabase automated contact registration.",
+    "status": "new",
+    "created_at": "2026-11-16T13:16:37.101Z"
+  }
+]
