@@ -11,9 +11,11 @@ const HeroCanvas = dynamic(() => import('./HeroCanvas'), {
   ssr: false,
   loading: () => (
     <div className="relative w-full h-[500px] sm:h-[560px] lg:h-[620px] xl:h-[660px] flex items-center justify-center bg-transparent select-none">
-      <div className="font-mono text-xs text-stone tracking-widest animate-pulse">
-        [INITIALIZING MONUMENT...]
-      </div>
+      <img
+        src="/logo.png"
+        alt="Triple Motive"
+        className="w-48 h-48 sm:w-56 sm:h-56 object-contain opacity-30 animate-pulse"
+      />
     </div>
   ),
 });
